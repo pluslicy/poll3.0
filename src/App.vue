@@ -106,7 +106,7 @@
 </script>
 <style>
   html {
-    font: normal normal 12px '微软雅黑','Microsoft YaHei';
+    font: normal normal 14px '微软雅黑','Microsoft YaHei';
     color: #666
   }
   input:-webkit-autofill {
@@ -126,6 +126,10 @@
   }
   div {
     box-sizing: border-box;
+  }
+
+  .el-form-item__label {
+    font-size: 12px;
   }
   .el-dialog__body {
     padding: 2em 2em 0 2em;

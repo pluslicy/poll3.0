@@ -36,7 +36,7 @@ export default new Router({
         component: SurveyList,
       },{
         path: 'surveyClazz',
-        component: SurveyList,
+        component: SurveyClazz,
       }]
     },{
       path: '/survey',

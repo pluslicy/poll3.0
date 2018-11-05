@@ -1,5 +1,10 @@
 # poll
 
+# 原型地址
+## http://120.78.164.247/poll/start.html
+# swagger地址
+## http://120.78.164.247:9999/swagger-ui.html
+
 > A Vue.js project
 
 ## Build Setup
