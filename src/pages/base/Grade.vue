@@ -47,7 +47,8 @@
 	</div>
 </template>
 <script>
-	import axios from '@/http/axios';
+	import getAxios from '@/http/getAxios'
+	let axios = getAxios();
 	export default {
 		data(){
 			return {

@@ -49,23 +49,33 @@
 		    <el-form-item label="题目选项" label-width="100px" >
 		
 		<el-table size='mini' border :data="questionDialog.form.options" style="width: 100%">
-      <el-table-column prop="$index" label="序号" width="60"> 
-      </el-table-column>
-      <el-table-column prop="name" label="label" width="60"> </el-table-column>
-      <el-table-column label="选项">
+      <el-table-column label="序号" width="60"> 
       	<template slot-scope='scope'>
-      		<el-input size='mini'></el-input>
+      		{{scope.$index+1}}
       	</template>
       </el-table-column>
-      <el-table-column prop="address" label="分值" width="60"></el-table-column>
+      <el-table-column prop="label" label="label" width="60"> 
+      </el-table-column>
+      <el-table-column label="选项">
+      	<template slot-scope='scope'>
+      		<el-input size='mini' v-model='scope.row.name'></el-input>
+      	</template>
+      </el-table-column>
+      <el-table-column label="分值" width="60">
+      	<template slot-scope='scope'>
+      		<el-input size='mini' v-model='scope.row.score'></el-input>
+      	</template>
+      </el-table-column>
       <el-table-column label="操作" width='60' align='center'>
       	<template slot-scope='scope'>
-      		<i class="fa fa-trash"></i>
+      		<i class="fa fa-trash" @click='deleteOption(scope.row)'></i>
       	</template>
       </el-table-column>
     </el-table>
     <div style="text-align:right;font-size:1.5em">
-    	<i class="fa fa-plus-circle" @click='addOption'></i>
+    	<el-button size='mini' @click='addOption' :disabled='questionDialog.form.options.length>=5'>
+    		<i class="fa fa-plus"></i>
+    	</el-button>
     </div>
 
 		    </el-form-item>
@@ -80,7 +90,9 @@
 	</div>
 </template>
 <script>
-	import axios from '@/http/axios'
+	// import axiosArray from '@/http/axiosArray'
+	import getAxios from '@/http/getAxios'
+	let axios = getAxios('array');
 	export default {
 		data(){
 			return {
@@ -101,8 +113,43 @@
 			this.findAllQuestions();
 		},
 		methods:{
+			deleteOption(row){
+				_.remove(this.questionDialog.form.options,(item)=>{
+					return item == row;
+				})
+				this.questionDialog.form.options.push({});
+				this.questionDialog.form.options.pop();
+			},
 			addOption(){
-				let option = {};
+				let option = {
+					name:''
+				};
+				let label = '';
+				let score = 0;
+				switch(this.questionDialog.form.options.length){
+					case 0:
+						label = 'A';
+						score = 5;
+						break;
+					case 1:
+						label = 'B';
+						score = 4;
+						break;
+					case 2:
+						label = 'C';
+						score = 3;
+						break;
+					case 3:
+						label = 'D';
+						score = 2;
+						break;
+					case 4:
+						label = 'E';
+						score = 1;
+						break;
+				}
+				option.label = label ;
+				option.score = score ;
 				this.questionDialog.form.options.push(option);
 			},
 			toAddQuestion(){
@@ -110,11 +157,27 @@
 				this.questionDialog.visible = true;
 			},
 			saveOrUpdateQuestion(){
-
+				axios.post('/question/saveOrUpdateQuestion',this.questionDialog.form)
+				.then(({data:result})=>{
+					this.$notify.success({
+						title:'成功',
+						message:result.message
+					})
+					this.closeQuestionDialog();
+					this.findAllQuestions();
+				})
+				.catch(()=>{
+					this.$notify.error({
+						title:'失败',
+						message:'服务器异常'
+					})
+				})
 			},
 			closeQuestionDialog(){
 				this.questionDialog.visible = false;
-				this.questionDialog.form = {};
+				this.questionDialog.form = {
+					options:[]
+				};
 			},
 			findAllQuestions(){
 				this.loading = true;

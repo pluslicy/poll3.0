@@ -23,7 +23,8 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import axios from 'axios'
+	import getAxios from '@/http/getAxios'
+	let axios = getAxios();
 	export default {
 		data(){
 			return {
