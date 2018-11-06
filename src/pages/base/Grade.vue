@@ -24,11 +24,11 @@
 		<!-- 模态框 -->
 		<el-dialog :title="gradeDialog.title" :visible.sync="gradeDialog.visible">
 			<!-- {{gradeDialog.form}} -->
-		  <el-form ref="categoryForm" :rules='rules' :model="gradeDialog.form" label-position='left' size='small'>
+		  <el-form ref="gradeForm" :rules='rules' :model="gradeDialog.form" label-position='left' size='small'>
 		    <el-form-item label="年级名称" label-width="100px" prop="name">
 		      <el-input v-model="gradeDialog.form.name" autocomplete="off"></el-input>
 		    </el-form-item>
-				<el-form-item label="年级简介" label-width="100px">
+				<el-form-item label="年级简介" label-width="100px" prop="descriptioin">
 		      <el-input
 					  type="textarea"
 					  :rows="2"
@@ -53,7 +53,18 @@
 			return {
 				loading:false,
 				grades:[],
-				rules:{},
+				rules:{
+					name:[{
+						required: true, 
+						message: '请输入栏目名称',
+						trigger: 'blur' 
+					}],
+					descriptioin:[{
+						required: true, 
+						message: '请输入介绍信息',
+						trigger: 'blur' 
+					}]
+				},
 				multipleSelection:[],
 				gradeDialog:{
 					title:'',
@@ -83,17 +94,22 @@
 			closeGradeDialog(){
 				this.gradeDialog.visible = false;
 				this.gradeDialog.form = {};
+				this.$refs.gradeForm.resetFields();
 			},
 			saveOrUpdateGrade(){
-				axios.post('/grade/saveOrUpdate',this.gradeDialog.form)
-				.then(({data:result})=>{
-					this.findAllGrades();
-					this.closeGradeDialog();
-					this.$notify.success({title:'成功',message:result.message})
-				})
-				.catch(()=>{
-					this.$notify.error({title:'错误',message:'服务器异常'})
-				})
+				this.$refs.gradeForm.validate((valid)=>{
+					if(valid){
+						axios.post('/grade/saveOrUpdate',this.gradeDialog.form)
+						.then(({data:result})=>{
+							this.findAllGrades();
+							this.closeGradeDialog();
+							this.$notify.success({title:'成功',message:result.message})
+						})
+						.catch(()=>{
+							this.$notify.error({title:'错误',message:'服务器异常'})
+						})		
+					}
+				});
 			},
 			toUpdateGrade(row){
 				this.gradeDialog.title = '修改年级';

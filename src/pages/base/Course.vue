@@ -25,11 +25,11 @@
 		<!-- 模态框 -->
 		<el-dialog :title="courseDialog.title" :visible.sync="courseDialog.visible">
 			<!-- {{courseDialog.form}} -->
-		  <el-form ref="categoryForm" :rules='rules' :model="courseDialog.form" label-position='left' size='small'>
+		  <el-form ref="courseForm" :rules='rules' :model="courseDialog.form" label-position='left' size='small'>
 		    <el-form-item label="课程名称" label-width="100px" prop="name">
 		      <el-input v-model="courseDialog.form.name" autocomplete="off"></el-input>
 		    </el-form-item>
-		    <el-form-item label="课程周期" label-width="100px" prop="name">
+		    <el-form-item label="课程周期" label-width="100px" prop="period">
 		      <el-input v-model="courseDialog.form.period" autocomplete="off"></el-input>
 		    </el-form-item>
 				<el-form-item label="课程简介" label-width="100px">
@@ -57,7 +57,18 @@
 			return {
 				loading:false,
 				courses:[],
-				rules:{},
+				rules:{
+					name:[{
+						required: true, 
+						message: '请输入课程名称',
+						trigger: 'blur' 
+					}],
+					period:[{
+						required: true, 
+						message: '请输入课时数',
+						trigger: 'blur' 
+					}]
+				},
 				multipleSelection:[],
 				courseDialog:{
 					title:'',
@@ -87,17 +98,22 @@
 			closeCourseDialog(){
 				this.courseDialog.visible = false;
 				this.courseDialog.form = {};
+				this.$refs.courseForm.resetFields();
 			},
 			saveOrUpdateCourse(){
-				axios.post('/course/saveOrUpdate',this.courseDialog.form)
-				.then(({data:result})=>{
-					this.findAllCourses();
-					this.closeCourseDialog();
-					this.$notify.success({title:'成功',message:result.message})
-				})
-				.catch(()=>{
-					this.$notify.error({title:'错误',message:'服务器异常'})
-				})
+				this.$refs.courseForm.validate((valid)=>{
+					if(valid){
+						axios.post('/course/saveOrUpdate',this.courseDialog.form)
+						.then(({data:result})=>{
+							this.findAllCourses();
+							this.closeCourseDialog();
+							this.$notify.success({title:'成功',message:result.message})
+						})
+						.catch(()=>{
+							this.$notify.error({title:'错误',message:'服务器异常'})
+						})
+					}
+				});
 			},
 			toUpdateCourse(row){
 				this.courseDialog.title = '修改课程';

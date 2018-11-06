@@ -24,17 +24,16 @@
 		<!-- 表格结束 -->
 		<!-- 模态框 -->
 		<el-dialog :title="clazzDialog.title" :visible.sync="clazzDialog.visible">
-			{{clazzDialog.form}}
-		  <el-form ref="categoryForm" :rules='rules' :model="clazzDialog.form" label-position='left' size='small'>
+		  <el-form ref="clazzForm" :rules='rules' :model="clazzDialog.form" label-position='left' size='small'>
 		    <el-form-item label="班级名称" label-width="100px" prop="name">
 		      <el-input v-model="clazzDialog.form.name" autocomplete="off"></el-input>
 		    </el-form-item>
-		    <el-form-item label="所属年级" label-width="100px" prop="name">
+		    <el-form-item label="所属年级" label-width="100px">
 		      <el-select style='width:100%' v-model="clazzDialog.form.gradeId" placeholder="请选择所属年级">
 		        <el-option :key='index' v-for='(c,index) in grades' :label="c.name" :value="c.id"></el-option>
 		      </el-select>
 		    </el-form-item>
-		    <el-form-item label="所属班主任" label-width="100px" prop="name">
+		    <el-form-item label="所属班主任" label-width="100px">
 		      <el-select style='width:100%' v-model="clazzDialog.form.chargeId" placeholder="请选择班主任">
 		        <el-option :key='index' v-for='(c,index) in teachers' :label="c.name" :value="c.id"></el-option>
 		      </el-select>
@@ -66,7 +65,13 @@
 				clazzes:[],
 				teachers:[],
 				grades:[],
-				rules:{},
+				rules:{
+					name:[{
+						required: true, 
+						message: '请输入班级名称',
+						trigger: 'blur' 
+					}]
+				},
 				clazzDialog:{
 					ftitle:'',
 					visible:false,
@@ -81,19 +86,24 @@
 		},
 		methods:{
 			saveOrUpdateClazz(){
-				axios.post('/clazz/saveOrUpdateClazz',this.clazzDialog.form)
-				.then(({data:result})=>{
-					this.findAllClazzes();
-					this.closeClazzDialog();
-					this.$notify.success({title:'成功',message:result.message})
-				})
-				.catch(()=>{
-					this.$notify.error({title:'错误',message:'服务器异常'})
-				})
+				this.$refs.clazzForm.validate((valid)=>{
+					if(valid){
+						axios.post('/clazz/saveOrUpdateClazz',this.clazzDialog.form)
+						.then(({data:result})=>{
+							this.findAllClazzes();
+							this.closeClazzDialog();
+							this.$notify.success({title:'成功',message:result.message})
+						})
+						.catch(()=>{
+							this.$notify.error({title:'错误',message:'服务器异常'})
+						})
+					}
+				});
 			},
 			closeClazzDialog(){
 				this.clazzDialog.visible = false;
 				this.clazzDialog.form = {};
+				this.$refs.clazzForm.resetFields();
 			},
 			findAllClazzes(){
 				this.loading = true;

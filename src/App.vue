@@ -28,27 +28,27 @@
       <div class="left-nav">
         <ul>
           <li :class="{current:currentRoute=='/'}">
-            <i class="fa fa-tv"></i>
+            <i class="fa fa-tv fa-fw"></i>
             <router-link to='/'>首页</router-link>
             <i class="fa fa-angle-right"></i>
           </li>
           <li :class="{current:currentRoute.indexOf('/base')==0}">
-            <i class="fa fa-ticket"></i>
+            <i class="fa fa-ticket fa-fw"></i>
             <router-link to='/base'>基础数据</router-link>
             <i class="fa fa-angle-right"></i>
           </li>
           <li :class="{current:currentRoute.indexOf('/qn')==0}">
-            <i class="fa fa-upload"></i>
+            <i class="fa fa-upload fa-fw"></i>
             <router-link to='/qn'>问卷管理</router-link>
             <i class="fa fa-angle-right"></i>
           </li>
           <li :class="{current:currentRoute.indexOf('/survey')==0}">
-            <i class="fa fa-tree"></i>
+            <i class="fa fa-tree fa-fw"></i>
             <router-link to='/survey'>课调管理</router-link>
             <i class="fa fa-angle-right"></i>
           </li>
           <li :class="{current:currentRoute.indexOf('/statistics')==0}">
-            <i class="fa fa-cog"></i>
+            <i class="fa fa-cog fa-fw"></i>
             <router-link to='/statistics'>课调统计</router-link>
             <i class="fa fa-angle-right"></i>
           </li>
@@ -123,6 +123,7 @@
   a {
     color: #666;
     text-decoration: none;
+    outline: none;
   }
   div {
     box-sizing: border-box;
@@ -133,6 +134,9 @@
   }
   .el-dialog__body {
     padding: 2em 2em 0 2em;
+  }
+  .el-dialog__header {
+    background-color: #ededed;
   }
 
   .header {
@@ -199,7 +203,7 @@
     right: 1em;
   }
   .center > .left-nav > ul > li i.fa:first-child {
-    left: 3em;
+    left: 2em;
   }
   .center > .left-nav > ul > li.current {
     background-color: #f0f0f0;

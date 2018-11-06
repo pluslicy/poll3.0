@@ -26,12 +26,11 @@
 		<!-- 表格结束 -->
 		<!-- 模态框 -->
 		<el-dialog :title="userDialog.title" :visible.sync="userDialog.visible">
-			{{userDialog.form}}
-		  <el-form ref="categoryForm" :rules='rules' :model="userDialog.form" label-position='left' size='small'>
+		  <el-form ref="userForm" :rules='rules' :model="userDialog.form" label-position='left' size='small'>
 		    <el-form-item label="姓名" label-width="100px" prop="name">
 		      <el-input v-model="userDialog.form.name" autocomplete="off"></el-input>
 		    </el-form-item>
-				<el-form-item label="用户类型" label-width="100px">
+				<el-form-item label="用户类型" label-width="100px" prop="type">
 		       <el-select style='width:100%' v-model="userDialog.form.type" placeholder="请选择用户类型">
 		        <el-option label="讲师" value="讲师"></el-option>
 		        <el-option label="班主任" value="班主任"></el-option>
@@ -76,7 +75,13 @@
 			return {
 				loading:false,
 				users:[],
-				rules:{},
+				rules:{
+					name:[{
+						required: true, 
+						message: '请输入姓名',
+						trigger: 'blur' 
+					}]
+				},
 				multipleSelection:[],
 				userDialog:{
 					title:'',
@@ -109,16 +114,21 @@
 			closeUserDialog(){
 				this.userDialog.visible = false;
 				this.userDialog.form = {};
+				this.$refs.userForm.resetFields();
 			},
 			saveOrUpdateUser(){
-				axios.post('/user/saveOrUpdate',this.userDialog.form)
-				.then(({data:result})=>{
-					this.findAllUsers();
-					this.closeUserDialog();
-					this.$notify.success({title:'成功',message:result.message})
-				})
-				.catch(()=>{
-					this.$notify.error({title:'错误',message:'服务器异常'})
+				this.$refs.userForm.validate((valid)=>{
+					if(valid){
+						axios.post('/user/saveOrUpdate',this.userDialog.form)
+						.then(({data:result})=>{
+							this.findAllUsers();
+							this.closeUserDialog();
+							this.$notify.success({title:'成功',message:result.message})
+						})
+						.catch(()=>{
+							this.$notify.error({title:'错误',message:'服务器异常'})
+						})
+					}
 				})
 			},
 			toUpdateUser(row){
