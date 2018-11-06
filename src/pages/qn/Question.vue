@@ -24,8 +24,8 @@
 					</ol>
 				</div>
 				<div class="question-btns">
-					<i class="fa fa-trash"></i>
-					<i class="fa fa-pencil"></i>
+					<i class="fa fa-trash" @click='deleteQuestion(q.id)'></i>
+					<i class="fa fa-pencil" @click='toUpdateQuestion(q)'></i>
 				</div>
 			</li>
 			<!-- 问题结束 -->
@@ -33,7 +33,7 @@
 		<!-- 内容结束 -->
 		<!-- 模态框 -->
 		<el-dialog width='80%' :title="questionDialog.title" :visible.sync="questionDialog.visible">
-			{{questionDialog.form}}
+			<!-- {{questionDialog.form}} -->
 		  <el-form ref="questionForm" :rules='rules' :model="questionDialog.form" label-position='left' size='small'>
 		    <el-form-item label="题目名称" label-width="100px" prop="name">
 		       <el-input
@@ -49,7 +49,7 @@
 		     		<el-option label='简答题' value='简答题'></el-option>
 		     	</el-select>
 		    </el-form-item>
-		    <el-form-item label="题目选项" label-width="100px" prop="descriptioin">
+		    <el-form-item v-if='questionDialog.form.questionType!="简答题"' label="题目选项" label-width="100px" prop="descriptioin">
 		    	<el-table :data='questionDialog.form.options' size='mini' border>
 		    		<el-table-column label='编号' width='60' align='center'>
 		    			<template slot-scope='{$index,row}'>
@@ -112,6 +112,14 @@
 			this.findAllQuestions();
 		},
 		methods:{
+			deleteQuestion(id){
+				alert(id);
+			},
+			toUpdateQuestion(row){
+				this.questionDialog.title = '修改题目';
+				this.questionDialog.visible = true;
+				this.questionDialog.form = row;
+			},
 			addOption(){
 				let option = {};
 				let label = ''
@@ -138,6 +146,13 @@
 				this.questionDialog.form.options.push(option);
 			},
 			saveOrUpdateQuestion(){
+				// 处理数据
+				if(this.questionDialog.form.id){
+					if(this.questionDialog.form.questionType=='简答题'){
+						delete this.questionDialog.form.options;
+					}
+				}
+				// 执行更新操作
 				axios.post('/question/saveOrUpdateQuestion',this.questionDialog.form)
 				.then(({data:result})=>{
 					if(result.status == '200'){
@@ -150,7 +165,6 @@
 				})
 				.catch((error)=>{
 					this.$notify.error({title:'错误', message:'服务器异常' })
-
 				})
 			},
 			closeQuestionDialog(){
@@ -171,11 +185,13 @@
 				.finally(()=>{
 					this.loading = false;
 				});
-
 			},
 			toAddQuestion(){
 				this.questionDialog.title = '添加问题';
 				this.questionDialog.visible = true;
+				this.questionDialog.form = {
+					options:[]
+				};
 			},
 			batchDeleteQuestion(){
 
@@ -185,6 +201,12 @@
 </script>
 
 <style>
+	.btns {
+		margin-bottom: .5em;
+	}
+ 	.question-list {
+ 		border-top: 1px solid #ededed;
+ 	}
 	.question {
 		padding: .5em 0;
 		border-bottom: 1px solid #ededed;
