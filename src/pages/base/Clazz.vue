@@ -162,6 +162,7 @@
 				clazz.chargeId = clazz.charge.id;
 				delete clazz.grade;
 				delete clazz.charge;
+				this.clazzDialog.title = "修改班级";
 				this.clazzDialog.form = clazz;
 				this.clazzDialog.visible = true;
 			},

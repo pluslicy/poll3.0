@@ -32,7 +32,7 @@
 </script>
 <style>
 	.setting-nav {
-		border-bottom: 1px solid #f0f0f0;
+		border-bottom: 2px solid #f0f0f0;
 		height: 30px;
 	}
 	

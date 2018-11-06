@@ -92,6 +92,7 @@
 	import getAxios from '@/http/getAxios'
 	//post提交数据，数据中有数组，并且数组中嵌套对象
 	let axios = getAxios('array');
+	let axios2 = getAxios();
 	export default {
 		data(){
 			return {
@@ -113,7 +114,26 @@
 		},
 		methods:{
 			deleteQuestion(id){
-				alert(id);
+				this.$confirm('此操作将永久删除该数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+        	axios.get('/question/deleteQuestionById?id='+id)
+        	.then(({data:result})=>{
+        		this.$notify.success({
+        			title:'成功',
+        			message:result.message
+        		});
+        		this.findAllQuestions();
+        	})
+        	.catch(()=>{
+        		this.$notify.error({
+        			title:'失败',
+        			message:'服务器异常'
+        		});
+        	})
+        })
 			},
 			toUpdateQuestion(row){
 				this.questionDialog.title = '修改题目';
@@ -194,7 +214,26 @@
 				};
 			},
 			batchDeleteQuestion(){
-
+				this.$confirm('此操作将永久删除该数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+        	axios2.post('/question/batchDeleteQuestion',{ids:this.ids})
+        	.then(({data:result})=>{
+        		this.$notify.success({
+        			title:'成功',
+        			message:result.message
+        		});
+        		this.findAllQuestions();
+        	})
+        	.catch(()=>{
+        		this.$notify.error({
+        			title:'失败',
+        			message:'服务器异常'
+        		});
+        	})
+        })
 			}
 		}
 	}
@@ -208,7 +247,7 @@
  		border-top: 1px solid #ededed;
  	}
 	.question {
-		padding: .5em 0;
+		padding: .5em 2em;
 		border-bottom: 1px solid #ededed;
 		position: relative;
 	}
