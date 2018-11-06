@@ -10,14 +10,12 @@ axios.interceptors.response.use(function (response) {
 import axios from 'axios'
 import qs from 'qs'
 // 全局配置
-axios.defaults.headers.post['Content-Type']   = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.baseURL = 'http://47.107.71.18:9999';
 axios.defaults.withCredentials = true;
 
 export default function(flag){
-
   let instance = axios.create();
-
   instance.interceptors.request.use((config) => {
       if (config.method === 'post') {
         if(flag && flag == 'array'){
