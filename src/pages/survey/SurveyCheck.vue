@@ -7,18 +7,18 @@
 		<!-- 按钮结束 -->
 		<!-- 表格 -->
 		<div v-loading='loading'>
-			<el-table :border='true' size='mini' :data="surveys" style="width: 100%">
+			<el-table :border='true' size='mini' :data="surveys" style="width: 100%" >
 				<el-table-column type="selection" width="55" fixed></el-table-column>
-	      <el-table-column prop="name" label="课调" width="160"></el-table-column>
-	      <el-table-column prop="name" label="班级" width="160"></el-table-column>
-	      <el-table-column prop="name" label="课程" width="160"></el-table-column>
-	      <el-table-column prop="name" label="讲师" width="160"></el-table-column>
-	      <el-table-column prop="name" label="问卷"></el-table-column>
-	      <el-table-column prop="name" label="创建时间" width="160"></el-table-column>
-	      <el-table-column label="操作" width='120' fixed="right" align='center'>
+	      <el-table-column prop="clazzVM.grade.name" label="年级" width="100"></el-table-column>
+	      <el-table-column prop="clazzVM.name" label="班级" width="100"></el-table-column>
+	      <el-table-column prop="course.name" label="课程" width="100"></el-table-column>
+	      <el-table-column prop="user.name" label="讲师" width="80"></el-table-column>
+	      <el-table-column prop="qnVM.name" label="问卷" width="300"></el-table-column>
+	      <el-table-column prop="surveydate" label="创建时间" width="160"></el-table-column>
+	      <el-table-column prop="status" label="状态" width="80" align='center'></el-table-column>
+	      <el-table-column label="操作" width='70' fixed="right" align='center'>
 	      	<template slot-scope='{row}'>
-	      		<el-button type='text' size='mini'>开启</el-button>
-	      		<el-button type='text' size='mini'>关闭</el-button>
+	      		<a href="javascript:void(0)">审核</a>
 	      	</template>
 	      </el-table-column>
 	    </el-table>

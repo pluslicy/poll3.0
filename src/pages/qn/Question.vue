@@ -92,6 +92,7 @@
 	import getAxios from '@/http/getAxios'
 	//post提交数据，数据中有数组，并且数组中嵌套对象
 	let axios = getAxios('array');
+	// arrayFormat:repeat 	批量删除
 	let axios2 = getAxios();
 	export default {
 		data(){

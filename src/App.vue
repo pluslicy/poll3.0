@@ -130,6 +130,10 @@
     box-sizing: border-box;
   }
 
+  td .el-button--text {
+    padding:0;
+  }
+
   .el-form-item__label {
     font-size: 12px;
   }
