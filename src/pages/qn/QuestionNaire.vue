@@ -156,6 +156,8 @@
 			},
 			toAddQuestionnaire(){
 				this.questionnaireDialog.title = '添加问卷';
+				this.choosedQuestions = [];
+				this.questionnaireDialog.form = [];
 				this.questionnaireDialog.visible = true;
 			},
 			closeQuestionnaireDialog(){
